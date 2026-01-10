@@ -16,7 +16,8 @@ dependencies = [
 ]
 
 [project.scripts]
-10K-baseline-harvest-engine-simulator = "options_simulator.main:main"
+start-simulator = "options_simulator.main:main"
+clear-output = "options_simulator.clear_output:clear_output_dir"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -7,9 +7,18 @@ python -m venv venv
 # Start venv session
 ./.venv/Scripts/Activate.ps1
 
-* Django Server Commands:
-# Start Django Server
-python manage.py runserver
+* Simulator Commands:
+# Start venv and run simulator
+& .venv\Scripts\Activate.ps1; python src/options_simulator/main.py
+
+# Run simulator directly (if venv active)
+python src/options_simulator/main.py
+
+# After installing package: run as script
+start-simulator
+
+# Clear output directory
+clear-output 
 
 * Unit Testing Commands:
 # Run all tests

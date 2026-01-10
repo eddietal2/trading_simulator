@@ -1,2 +1,3 @@
 [console_scripts]
-10K-baseline-harvest-engine-simulator = options_simulator.main:main
+clear-output = options_simulator.clear_output:clear_output_dir
+start-simulator = options_simulator.main:main
