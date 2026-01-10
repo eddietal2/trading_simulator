@@ -19,7 +19,7 @@ def simulate_exponential_growth(P, r=0.25, periods=52):
         amounts.append(A)
     return amounts
 
-def simulate_10K_baseline_harvest_engine(initial_pot=220, weekly_return_rate=0.25, engine_cap=10000, total_weeks=52, initial_vault=0.0):
+def simulate_10K_baseline_harvest_engine(initial_pot=0, weekly_return_rate=0, engine_cap=0, total_weeks=0, initial_vault=0):
     """
     Simulate the 10K Baseline Harvest Engine with accumulation and distribution phases.
 

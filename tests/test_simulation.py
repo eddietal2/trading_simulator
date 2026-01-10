@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
-from options_simulator.simulation import simulate_exponential_growth, simulate_10K_baseline_harvest_engine
+from simulator.simulation import simulate_exponential_growth, simulate_10K_baseline_harvest_engine
 
 class TestSimulateExponentialGrowth:
     def test_default_parameters(self):

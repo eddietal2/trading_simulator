@@ -16,8 +16,8 @@ dependencies = [
 ]
 
 [project.scripts]
-start-simulator = "options_simulator.main:main"
-clear-output = "options_simulator.clear_output:clear_output_dir"
+start-simulator = "simulator.main:main"
+clear-output = "simulator.clear_output:clear_output_dir"
 
 [tool.setuptools.packages.find]
 where = ["src"]

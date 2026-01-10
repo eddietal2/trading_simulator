@@ -6,8 +6,8 @@ src/10K_baseline_harvest_engine_simulator.egg-info/dependency_links.txt
 src/10K_baseline_harvest_engine_simulator.egg-info/entry_points.txt
 src/10K_baseline_harvest_engine_simulator.egg-info/requires.txt
 src/10K_baseline_harvest_engine_simulator.egg-info/top_level.txt
-src/options_simulator/__init__.py
-src/options_simulator/clear_output.py
-src/options_simulator/main.py
-src/options_simulator/simulation.py
+src/simulator/__init__.py
+src/simulator/clear_output.py
+src/simulator/main.py
+src/simulator/simulation.py
 tests/test_simulation.py

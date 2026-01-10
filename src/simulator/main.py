@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import os
 
-from options_simulator.simulation import simulate_10K_baseline_harvest_engine, simulate_exponential_growth
+from simulator.simulation import simulate_10K_baseline_harvest_engine, simulate_exponential_growth
 
 def main():
-    print("=== Options Simulator ===")
+    print("=== Trading Simulator ===")
     print("Available simulation types:")
     print("1. Exponential Growth")
     print("2. 10K Baseline Harvest Engine")
@@ -27,16 +27,40 @@ def main():
     simulation_type = "exponential" if sim_choice == "1" else "10k_baseline"
     
     # Get principal
-    principal_input = input("Enter principal/initial amount [220]: ").strip()
-    initial_pot = float(principal_input) if principal_input else 1000 
+    while True:
+        principal_input = input("Enter principal/initial amount [e.g, 1000]: ").strip()
+        if not principal_input:
+            initial_pot = 1000.0
+            break
+        try:
+            initial_pot = float(principal_input)
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid number (e.g., 1000).") 
     
     if simulation_type == "exponential":
         # Parameters for exponential growth
-        rate_input = input("Enter weekly growth rate (decimal, e.g., 0.25 for 25%) [0.25]: ").strip()
-        weekly_return_rate = float(rate_input) if rate_input else 0.25
+        while True:
+            rate_input = input("Enter weekly growth rate (decimal, e.g., 0.25 for 25%) [0.25]: ").strip()
+            if not rate_input:
+                weekly_return_rate = 0.25
+                break
+            try:
+                weekly_return_rate = float(rate_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid decimal number (e.g., 0.25).")
         
-        periods_input = input("Enter number of periods/weeks [52]: ").strip()
-        total_weeks = int(periods_input) if periods_input else 52
+        while True:
+            periods_input = input("Enter number of periods/weeks [52]: ").strip()
+            if not periods_input:
+                total_weeks = 52
+                break
+            try:
+                total_weeks = int(periods_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid integer (e.g., 52).")
         
         # Simulate exponential growth
         amounts = simulate_exponential_growth(initial_pot, weekly_return_rate, total_weeks)
@@ -46,17 +70,49 @@ def main():
         
     else:  # 10k_baseline
         # Parameters for 10K baseline
-        rate_input = input("Enter weekly return rate (decimal, e.g., 0.25 for 25%): ").strip()
-        weekly_return_rate = float(rate_input) if rate_input else 0.25
+        while True:
+            rate_input = input("Enter weekly return rate (decimal, e.g., 0.25 for 25%): ").strip()
+            if not rate_input:
+                weekly_return_rate = 0.25
+                break
+            try:
+                weekly_return_rate = float(rate_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid decimal number (e.g., 0.25).")
         
-        cap_input = input("Enter engine cap [Example: 10000]: ").strip()
-        engine_cap = float(cap_input) if cap_input else 10000
+        while True:
+            cap_input = input("Enter engine cap [Example: 10000]: ").strip()
+            if not cap_input:
+                engine_cap = 10000.0
+                break
+            try:
+                engine_cap = float(cap_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid number (e.g., 10000).")
         
-        weeks_input = input("Enter total weeks [Example: 52]: ").strip()
-        total_weeks = int(weeks_input) if weeks_input else 52
+        while True:
+            weeks_input = input("Enter total weeks [Example: 52]: ").strip()
+            if not weeks_input:
+                total_weeks = 52
+                break
+            try:
+                total_weeks = int(weeks_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid integer (e.g., 52).")
         
-        vault_input = input("Enter initial vault/savings amount [300]: ").strip()
-        initial_vault = float(vault_input) if vault_input else 300.0
+        while True:
+            vault_input = input("Enter initial vault/savings amount [300]: ").strip()
+            if not vault_input:
+                initial_vault = 300.0
+                break
+            try:
+                initial_vault = float(vault_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid number (e.g., 300).")
         
         # Simulate 10K baseline
         history = simulate_10K_baseline_harvest_engine(initial_pot, weekly_return_rate, engine_cap, total_weeks, initial_vault)
