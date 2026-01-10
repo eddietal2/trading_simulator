@@ -12,11 +12,17 @@ python -m venv venv
 python manage.py runserver
 
 * Unit Testing Commands:
-# Run Unit Test (entire file - Python)
-python manage.py test authentication --keepdb
+# Run all tests
+pytest
 
-# Run Unit Test (specific test)
-python manage.py test authentication.tests.MagicLinkAuthTests.test_email_change_unauthorized --keepdb
+# Run tests in specific file
+pytest tests/test_simulation.py
+
+# Run specific test
+pytest tests/test_simulation.py::TestSimulateExponentialGrowth::test_default_parameters
+
+# Run tests with verbose output
+pytest -v
 
 * Git Scripts:
 # Check status

@@ -5,3 +5,4 @@ Summary: A Python simulator for the 10K Baseline Harvest Engine with accumulatio
 Author-email: Your Name <your.email@example.com>
 Requires-Dist: numpy
 Requires-Dist: matplotlib
+Requires-Dist: pytest

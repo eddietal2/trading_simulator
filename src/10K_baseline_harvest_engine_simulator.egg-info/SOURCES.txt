@@ -9,3 +9,4 @@ src/10K_baseline_harvest_engine_simulator.egg-info/top_level.txt
 src/options_simulator/__init__.py
 src/options_simulator/main.py
 src/options_simulator/simulation.py
+tests/test_simulation.py
