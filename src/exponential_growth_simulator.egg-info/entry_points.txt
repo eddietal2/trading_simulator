@@ -1,0 +1,2 @@
+[console_scripts]
+exponential-growth-simulator = options_simulator.main:main

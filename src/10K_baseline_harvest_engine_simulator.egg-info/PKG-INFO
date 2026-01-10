@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: 10K-baseline-harvest-engine-simulator
+Version: 0.1.0
+Summary: A Python simulator for the 10K Baseline Harvest Engine with accumulation and distribution phases
+Author-email: Your Name <your.email@example.com>
+Requires-Dist: numpy
+Requires-Dist: matplotlib

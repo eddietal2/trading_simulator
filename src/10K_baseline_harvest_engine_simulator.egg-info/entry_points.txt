@@ -1,0 +1,2 @@
+[console_scripts]
+10K-baseline-harvest-engine-simulator = options_simulator.main:main
