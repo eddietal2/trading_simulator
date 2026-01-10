@@ -1,34 +1,38 @@
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import os
+from colorama import init, Fore, Back, Style
 
 from simulator.simulation import simulate_10K_baseline_harvest_engine, simulate_exponential_growth
 
+# Initialize colorama
+init(autoreset=True)
+
 def main():
-    print("=== Trading Simulator ===")
-    print("Available simulation types:")
-    print("1. Exponential Growth")
-    print("2. 10K Baseline Harvest Engine")
-    print("3. Exit")
+    print(f"{Fore.CYAN}{Style.BRIGHT}🚀 === Trading Simulator === 🚀{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}Available simulation types:{Style.RESET_ALL}")
+    print(f"1. 📈 Exponential Growth")
+    print(f"2. 💰 10K Baseline Harvest Engine")
+    print(f"3. ❌ Exit")
     
     # Get simulation type
     while True:
-        sim_choice = input("Select simulation type (1, 2, or 3) [2]: ").strip()
+        sim_choice = input(f"{Fore.YELLOW}Select simulation type (1, 2, or 3) [2]: {Style.RESET_ALL}").strip()
         if sim_choice == "":
             sim_choice = "2"
         if sim_choice in ["1", "2", "3"]:
             break
-        print("Invalid choice. Please enter 1, 2, or 3.")
+        print(f"{Fore.RED}❌ Invalid choice. Please enter 1, 2, or 3.{Style.RESET_ALL}")
     
     if sim_choice == "3":
-        print("Exiting program. Goodbye!")
+        print(f"{Fore.GREEN}👋 Exiting program. Goodbye!{Style.RESET_ALL}")
         return
     
     simulation_type = "exponential" if sim_choice == "1" else "10k_baseline"
     
     # Get principal
     while True:
-        principal_input = input("Enter principal/initial amount [e.g, 1000]: ").strip()
+        principal_input = input(f"{Fore.YELLOW}💵 Enter principal/initial amount [1000]: {Style.RESET_ALL}").strip()
         if not principal_input:
             initial_pot = 1000.0
             break
@@ -36,12 +40,12 @@ def main():
             initial_pot = float(principal_input)
             break
         except ValueError:
-            print("Invalid input. Please enter a valid number (e.g., 1000).") 
+            print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 1000).{Style.RESET_ALL}")
     
     if simulation_type == "exponential":
         # Parameters for exponential growth
         while True:
-            rate_input = input("Enter weekly growth rate (decimal, e.g., 0.25 for 25%) [0.25]: ").strip()
+            rate_input = input(f"{Fore.YELLOW}📈 Enter weekly growth rate (decimal, e.g., 0.25 for 25%) [0.25]: {Style.RESET_ALL}").strip()
             if not rate_input:
                 weekly_return_rate = 0.25
                 break
@@ -49,10 +53,10 @@ def main():
                 weekly_return_rate = float(rate_input)
                 break
             except ValueError:
-                print("Invalid input. Please enter a valid decimal number (e.g., 0.25).")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid decimal number (e.g., 0.25).{Style.RESET_ALL}")
         
         while True:
-            periods_input = input("Enter number of periods/weeks [52]: ").strip()
+            periods_input = input(f"{Fore.YELLOW}📅 Enter number of periods/weeks [52]: {Style.RESET_ALL}").strip()
             if not periods_input:
                 total_weeks = 52
                 break
@@ -60,7 +64,7 @@ def main():
                 total_weeks = int(periods_input)
                 break
             except ValueError:
-                print("Invalid input. Please enter a valid integer (e.g., 52).")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid integer (e.g., 52).{Style.RESET_ALL}")
         
         # Simulate exponential growth
         amounts = simulate_exponential_growth(initial_pot, weekly_return_rate, total_weeks)
@@ -71,7 +75,7 @@ def main():
     else:  # 10k_baseline
         # Parameters for 10K baseline
         while True:
-            rate_input = input("Enter weekly return rate (decimal, e.g., 0.25 for 25%): ").strip()
+            rate_input = input(f"{Fore.YELLOW}💹 Enter weekly return rate (decimal, e.g., 0.25 for 25%): {Style.RESET_ALL}").strip()
             if not rate_input:
                 weekly_return_rate = 0.25
                 break
@@ -79,10 +83,10 @@ def main():
                 weekly_return_rate = float(rate_input)
                 break
             except ValueError:
-                print("Invalid input. Please enter a valid decimal number (e.g., 0.25).")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid decimal number (e.g., 0.25).{Style.RESET_ALL}")
         
         while True:
-            cap_input = input("Enter engine cap [Example: 10000]: ").strip()
+            cap_input = input(f"{Fore.YELLOW}🎯 Enter engine cap [Example: 10000]: {Style.RESET_ALL}").strip()
             if not cap_input:
                 engine_cap = 10000.0
                 break
@@ -90,10 +94,10 @@ def main():
                 engine_cap = float(cap_input)
                 break
             except ValueError:
-                print("Invalid input. Please enter a valid number (e.g., 10000).")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 10000).{Style.RESET_ALL}")
         
         while True:
-            weeks_input = input("Enter total weeks [Example: 52]: ").strip()
+            weeks_input = input(f"{Fore.YELLOW}📅 Enter total weeks [Example: 52]: {Style.RESET_ALL}").strip()
             if not weeks_input:
                 total_weeks = 52
                 break
@@ -101,10 +105,10 @@ def main():
                 total_weeks = int(weeks_input)
                 break
             except ValueError:
-                print("Invalid input. Please enter a valid integer (e.g., 52).")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid integer (e.g., 52).{Style.RESET_ALL}")
         
         while True:
-            vault_input = input("Enter initial vault/savings amount [300]: ").strip()
+            vault_input = input(f"{Fore.YELLOW}🏦 Enter initial vault/savings amount [300]: {Style.RESET_ALL}").strip()
             if not vault_input:
                 initial_vault = 300.0
                 break
@@ -112,7 +116,7 @@ def main():
                 initial_vault = float(vault_input)
                 break
             except ValueError:
-                print("Invalid input. Please enter a valid number (e.g., 300).")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 300).{Style.RESET_ALL}")
         
         # Simulate 10K baseline
         history = simulate_10K_baseline_harvest_engine(initial_pot, weekly_return_rate, engine_cap, total_weeks, initial_vault)
@@ -163,7 +167,7 @@ def main():
     # Write text file
     with open(txt_filepath, 'w') as f:
         f.write("\n".join(output_lines))
-    print(f"\nResults saved to {run_dir}")
+    print(f"{Fore.GREEN}✅ Results saved to {run_dir}{Style.RESET_ALL}")
 
     # Print to console
     for line in output_lines:

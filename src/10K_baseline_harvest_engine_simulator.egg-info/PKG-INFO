@@ -6,3 +6,4 @@ Author-email: Your Name <your.email@example.com>
 Requires-Dist: numpy
 Requires-Dist: matplotlib
 Requires-Dist: pytest
+Requires-Dist: colorama
