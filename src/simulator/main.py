@@ -11,7 +11,7 @@ from .simulation import simulate_baseline_harvest_engine, simulate_exponential_g
 init(autoreset=True)
 
 def animate_ascii_art():
-    """Animate the ASCII art banner with sliding and color cycling"""
+    """Display the ASCII art banner"""
     trading_art = [
         "████████╗██████╗ █████╗ ██████╗ ██╗███╗   ██╗ ██████╗",
         "╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║████╗  ██║██╔════╝",
@@ -30,56 +30,7 @@ def animate_ascii_art():
         "╚══════╝╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝"
     ]
     
-    # Slide in TRADING from left to right
-    max_slide = 40
-    for slide_pos in range(max_slide + 1):
-        print(f"\033[2J\033[H", end="")  # Clear screen
-        spaces = " " * (max_slide - slide_pos)
-        print(f"{Fore.CYAN}{Style.BRIGHT}")
-        for line in trading_art:
-            print(f"{spaces}{line}")
-        time.sleep(0.02)  # Fast slide
-    
-    time.sleep(0.3)  # Pause before SIMULATOR
-    
-    # Slide in SIMULATOR from left to right
-    for slide_pos in range(max_slide + 1):
-        print(f"\033[2J\033[H", end="")  # Clear screen
-        spaces = " " * (max_slide - slide_pos)
-        print(f"{Fore.CYAN}{Style.BRIGHT}")
-        # Print TRADING (already in position)
-        for line in trading_art:
-            print(line)
-        print()
-        # Print SIMULATOR sliding in
-        for line in simulator_art:
-            print(f"{spaces}{line}")
-        time.sleep(0.02)  # Fast slide
-    
-    time.sleep(0.5)  # Pause before color cycling
-    
-    # Color cycling animation
-    colors = [Fore.CYAN, Fore.GREEN, Fore.YELLOW, Fore.MAGENTA, Fore.RED, Fore.MAGENTA]
-    
-    # Animate for 2 seconds (4 cycles)
-    for cycle in range(4):
-        color = colors[cycle % len(colors)]
-        print(f"\033[2J\033[H", end="")  # Clear screen and move cursor to top
-        print(f"{color}{Style.BRIGHT}")
-        
-        # Print TRADING
-        for line in trading_art:
-            print(line)
-        print()
-        
-        # Print SIMULATOR
-        for line in simulator_art:
-            print(line)
-        
-        print(f"{Style.RESET_ALL}")
-        time.sleep(0.5)  # Half second delay
-    
-    # Final static display
+    # Display the final static banner
     print(f"\033[2J\033[H", end="")  # Clear screen
     print(f"{Fore.CYAN}{Style.BRIGHT}")
     for line in trading_art:
