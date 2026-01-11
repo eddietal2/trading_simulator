@@ -4,6 +4,8 @@ Trading Simulator Architecture Generator
 
 This script generates a Mermaid.js graph representing the architecture
 of the Trading Simulator application.
+
+command: python architecture/generate_architecture.py
 """
 
 import os
