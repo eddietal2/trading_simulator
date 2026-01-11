@@ -19,42 +19,42 @@ def generate_architecture_graph():
 graph TB
     %% User Interface Layer
     subgraph "User Interface Layer"
-        CLI[CLI Interface<br/>main.py]
-        ANIM[ASCII Animation<br/>animate_ascii_art()]
-        MENU[Menu System<br/>Parameter Input]
+        CLI["CLI Interface<br/>main.py"]
+        ANIM["ASCII Animation<br/>animate_ascii_art()"]
+        MENU["Menu System<br/>Parameter Input"]
     end
 
     %% Core Logic Layer
     subgraph "Core Logic Layer"
-        MAIN[Main Controller<br/>main()]
-        PARAM[Parameter Handler<br/>Input Validation]
-        OUTPUT[Output Generator<br/>Reports & Charts]
+        MAIN["Main Controller<br/>main()"]
+        PARAM["Parameter Handler<br/>Input Validation"]
+        OUTPUT["Output Generator<br/>Reports & Charts"]
     end
 
     %% Simulation Engine Layer
     subgraph "Simulation Engine Layer"
-        EXP[Exponential Growth<br/>simulate_exponential_growth()]
-        BASE[Baseline Harvest Engine<br/>simulate_baseline_harvest_engine()]
+        EXP["Exponential Growth<br/>simulate_exponential_growth()"]
+        BASE["Baseline Harvest Engine<br/>simulate_baseline_harvest_engine()"]
     end
 
     %% Data Management Layer
     subgraph "Data Management Layer"
-        JSON[Parameter Persistence<br/>last_simulation_params.json]
-        REPORTS[Report Generation<br/>simulation.txt + plot.png]
-        HISTORY[Simulation History<br/>Weekly Data Points]
+        JSON["Parameter Persistence<br/>last_simulation_params.json"]
+        REPORTS["Report Generation<br/>simulation.txt + plot.png"]
+        HISTORY["Simulation History<br/>Weekly Data Points"]
     end
 
     %% Testing Layer
     subgraph "Testing Layer"
-        UNIT[Unit Tests<br/>test_simulation.py]
-        PYTEST[pytest Framework]
+        UNIT["Unit Tests<br/>test_simulation.py"]
+        PYTEST["pytest Framework"]
     end
 
     %% External Dependencies
     subgraph "External Dependencies"
-        NUMPY[numpy<br/>Numerical Computing]
-        MATPLOTLIB[matplotlib<br/>Chart Generation]
-        COLORAMA[colorama<br/>Terminal Colors]
+        NUMPY["numpy<br/>Numerical Computing"]
+        MATPLOTLIB["matplotlib<br/>Chart Generation"]
+        COLORAMA["colorama<br/>Terminal Colors"]
     end
 
     %% Flow Connections
@@ -108,57 +108,57 @@ def generate_detailed_architecture():
 graph TB
     %% Entry Point
     subgraph "Entry Point"
-        MAIN_PY[main.py<br/>if __name__ == "__main__"]
+        MAIN_PY["main.py<br/>if __name__ == '__main__'"]
     end
 
     %% CLI Components
     subgraph "CLI Components"
-        ASCII_ART[animate_ascii_art()<br/>ASCII Banner Display]
-        MENU_SYSTEM[Menu System<br/>Simulation Type Selection]
-        INPUT_HANDLER[Input Handler<br/>Parameter Collection]
-        VALIDATION[Input Validation<br/>Type & Range Checking]
+        ASCII_ART["animate_ascii_art()<br/>ASCII Banner Display"]
+        MENU_SYSTEM["Menu System<br/>Simulation Type Selection"]
+        INPUT_HANDLER["Input Handler<br/>Parameter Collection"]
+        VALIDATION["Input Validation<br/>Type & Range Checking"]
     end
 
     %% Simulation Types
     subgraph "Simulation Types"
-        EXP_SIM[Exponential Growth<br/>simulate_exponential_growth()]
-        BASE_SIM[Baseline Harvest Engine<br/>simulate_baseline_harvest_engine()]
+        EXP_SIM["Exponential Growth<br/>simulate_exponential_growth()"]
+        BASE_SIM["Baseline Harvest Engine<br/>simulate_baseline_harvest_engine()"]
     end
 
     %% Core Algorithms
     subgraph "Core Algorithms"
-        COMPOUND[Compound Interest<br/>A = P(1+r)^n]
-        HARVEST_LOGIC[Harvest Logic<br/>Growth vs Distribution Phase]
-        VAULT_ALLOCATION[Vault Allocation<br/>Percentage-based Savings]
-        ENGINE_CAP[Engine Cap Logic<br/>Maximum Pot Size Control]
+        COMPOUND["Compound Interest<br/>A = P(1+r)^n"]
+        HARVEST_LOGIC["Harvest Logic<br/>Growth vs Distribution Phase"]
+        VAULT_ALLOCATION["Vault Allocation<br/>Percentage-based Savings"]
+        ENGINE_CAP["Engine Cap Logic<br/>Maximum Pot Size Control"]
     end
 
     %% Data Processing
     subgraph "Data Processing"
-        WEEKLY_CALC[Weekly Calculations<br/>Profit & Growth]
-        HISTORY_BUILDER[History Builder<br/>Time Series Data]
-        MONTHLY_REPORTS[Monthly Reports<br/>Aggregated Statistics]
+        WEEKLY_CALC["Weekly Calculations<br/>Profit & Growth"]
+        HISTORY_BUILDER["History Builder<br/>Time Series Data"]
+        MONTHLY_REPORTS["Monthly Reports<br/>Aggregated Statistics"]
     end
 
     %% Output Generation
     subgraph "Output Generation"
-        TEXT_REPORT[Text Report<br/>simulation.txt]
-        CHART_GEN[Chart Generation<br/>plot.png via matplotlib]
-        CONSOLE_OUTPUT[Console Output<br/>Terminal Display]
+        TEXT_REPORT["Text Report<br/>simulation.txt"]
+        CHART_GEN["Chart Generation<br/>plot.png via matplotlib"]
+        CONSOLE_OUTPUT["Console Output<br/>Terminal Display"]
     end
 
     %% File Management
     subgraph "File Management"
-        PARAM_SAVE[Parameter Save<br/>JSON Persistence]
-        OUTPUT_DIR[Output Directory<br/>run_*/ Structure]
-        TIMESTAMP[Timestamp Naming<br/>YYYY-MM-DD_HH-MM-SS]
+        PARAM_SAVE["Parameter Save<br/>JSON Persistence"]
+        OUTPUT_DIR["Output Directory<br/>run_*/ Structure"]
+        TIMESTAMP["Timestamp Naming<br/>YYYY-MM-DD_HH-MM-SS"]
     end
 
     %% Testing Framework
     subgraph "Testing Framework"
-        EXP_TESTS[Test Exponential Growth<br/>Multiple Scenarios]
-        BASE_TESTS[Test Baseline Engine<br/>Edge Cases & Logic]
-        ASSERTIONS[Assertion Checks<br/>Numerical Accuracy]
+        EXP_TESTS["Test Exponential Growth<br/>Multiple Scenarios"]
+        BASE_TESTS["Test Baseline Engine<br/>Edge Cases & Logic"]
+        ASSERTIONS["Assertion Checks<br/>Numerical Accuracy"]
     end
 
     %% Flow
