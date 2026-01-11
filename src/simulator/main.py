@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import os
 from colorama import init, Fore, Back, Style
 
-from simulator.simulation import simulate_10K_baseline_harvest_engine, simulate_exponential_growth
+from simulator.simulation import simulate_baseline_harvest_engine, simulate_exponential_growth
 
 # Initialize colorama
 init(autoreset=True)
@@ -12,7 +12,7 @@ def main():
     print(f"{Fore.CYAN}{Style.BRIGHT}🚀 === Trading Simulator === 🚀{Style.RESET_ALL}")
     print(f"{Fore.GREEN}Available simulation types:{Style.RESET_ALL}")
     print(f"1. 📈 Exponential Growth")
-    print(f"2. 💰 10K Baseline Harvest Engine")
+    print(f"2. 💰 Baseline Harvest Engine")
     print(f"3. ❌ Exit")
     
     # Get simulation type
@@ -28,7 +28,7 @@ def main():
         print(f"{Fore.GREEN}👋 Exiting program. Goodbye!{Style.RESET_ALL}")
         return
     
-    simulation_type = "exponential" if sim_choice == "1" else "10k_baseline"
+    simulation_type = "exponential" if sim_choice == "1" else "baseline"
     
     # Get principal
     while True:
@@ -43,18 +43,19 @@ def main():
             print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 1000).{Style.RESET_ALL}")
     
     if simulation_type == "exponential":
-        # Parameters for exponential growth
+        # Get weekly return rate for exponential growth
         while True:
-            rate_input = input(f"{Fore.YELLOW}📈 Enter weekly growth rate (decimal, e.g., 0.25 for 25%) [0.25]: {Style.RESET_ALL}").strip()
+            rate_input = input(f"{Fore.YELLOW}💹 Enter weekly return rate (percentage, e.g., 25 for 25%) [25]: {Style.RESET_ALL}").strip()
             if not rate_input:
                 weekly_return_rate = 0.25
                 break
             try:
-                weekly_return_rate = float(rate_input)
+                weekly_return_rate = float(rate_input) / 100.0
                 break
             except ValueError:
-                print(f"{Fore.RED}❌ Invalid input. Please enter a valid decimal number (e.g., 0.25).{Style.RESET_ALL}")
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 25).{Style.RESET_ALL}")
         
+        # Parameters for exponential growth
         while True:
             periods_input = input(f"{Fore.YELLOW}📅 Enter number of periods/weeks [52]: {Style.RESET_ALL}").strip()
             if not periods_input:
@@ -74,16 +75,7 @@ def main():
         
     else:  # 10k_baseline
         # Parameters for 10K baseline
-        while True:
-            rate_input = input(f"{Fore.YELLOW}💹 Enter weekly return rate (decimal, e.g., 0.25 for 25%): {Style.RESET_ALL}").strip()
-            if not rate_input:
-                weekly_return_rate = 0.25
-                break
-            try:
-                weekly_return_rate = float(rate_input)
-                break
-            except ValueError:
-                print(f"{Fore.RED}❌ Invalid input. Please enter a valid decimal number (e.g., 0.25).{Style.RESET_ALL}")
+        weekly_return_rate = 0.25  # Default weekly return rate
         
         while True:
             cap_input = input(f"{Fore.YELLOW}🎯 Enter engine cap [Example: 10000]: {Style.RESET_ALL}").strip()
@@ -118,10 +110,36 @@ def main():
             except ValueError:
                 print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 300).{Style.RESET_ALL}")
         
-        # Simulate 10K baseline
-        history = simulate_10K_baseline_harvest_engine(initial_pot, weekly_return_rate, engine_cap, total_weeks, initial_vault)
-        title = "10K Baseline Harvest Engine Simulation"
-        plot_title = f"10K Baseline Harvest Engine Simulation over {total_weeks} Weeks"
+        while True:
+            growth_pct_input = input(f"{Fore.YELLOW}📊 Enter vault allocation % during growth phase (e.g., 50 for 50%) [50]: {Style.RESET_ALL}").strip()
+            if not growth_pct_input:
+                growth_vault_pct = 50.0
+                break
+            try:
+                growth_vault_pct = float(growth_pct_input)
+                if 0 <= growth_vault_pct <= 100:
+                    break
+                print(f"{Fore.RED}❌ Percentage must be between 0 and 100.{Style.RESET_ALL}")
+            except ValueError:
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 50).{Style.RESET_ALL}")
+        
+        while True:
+            harvest_pct_input = input(f"{Fore.YELLOW}🌾 Enter vault allocation % during harvest phase (e.g., 25 for 25%) [25]: {Style.RESET_ALL}").strip()
+            if not harvest_pct_input:
+                harvest_vault_pct = 25.0
+                break
+            try:
+                harvest_vault_pct = float(harvest_pct_input)
+                if 0 <= harvest_vault_pct <= 100:
+                    break
+                print(f"{Fore.RED}❌ Percentage must be between 0 and 100.{Style.RESET_ALL}")
+            except ValueError:
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., 25).{Style.RESET_ALL}")
+        
+        # Simulate Baseline Harvest Engine
+        history = simulate_baseline_harvest_engine(initial_pot, weekly_return_rate, engine_cap, total_weeks, initial_vault, growth_vault_pct, harvest_vault_pct)
+        title = "Baseline Harvest Engine Simulation"
+        plot_title = f"Baseline Harvest Engine Simulation over {total_weeks} Weeks"
 
     # Generate dates starting from Monday, January 5, 2026
     start_date = datetime(2026, 1, 5)  # Monday
@@ -152,6 +170,43 @@ def main():
         output_lines.append("")
         output_lines.append(f"Initial amount: ${initial_pot:,.2f}")
         output_lines.append(f"Final amount after {total_weeks} weeks: ${history[-1]['amount']:,.2f}")
+        output_lines.append("")
+        output_lines.append("Simulation Parameters:")
+        output_lines.append(f"Weekly return rate: {weekly_return_rate*100:.1f}%")
+        
+        # Add monthly report for exponential growth
+        output_lines.append("")
+        output_lines.append("=" * 80)
+        output_lines.append("MONTHLY REPORT")
+        output_lines.append("=" * 80)
+        output_lines.append("Month          | End Date   | Amount                | Monthly Growth        | Weekly Growth")
+        output_lines.append("-" * 110)
+        
+        current_month = start_date.month
+        current_year = start_date.year
+        month_start_idx = 0
+        
+        for i, (entry, date) in enumerate(zip(history, dates)):
+            # Check if we've reached end of month or end of simulation
+            is_month_end = (i == len(history) - 1) or (dates[i + 1].month != current_month or dates[i + 1].year != current_year)
+            
+            if is_month_end:
+                month_start_amount = history[month_start_idx]['amount']
+                month_end_amount = entry['amount']
+                monthly_growth = month_end_amount - month_start_amount
+                
+                # Calculate number of weeks in this month
+                weeks_in_month = i - month_start_idx + 1
+                weekly_growth = monthly_growth / weeks_in_month if weeks_in_month > 0 else 0
+                
+                month_name = date.strftime('%B %Y')
+                output_lines.append(f"{month_name:14s} | {date.strftime('%Y-%m-%d'):10s} | ${entry['amount']:>19,.2f} | ${monthly_growth:>19,.2f} | ${weekly_growth:>13,.2f}")
+                
+                # Update for next month
+                if i < len(history) - 1:
+                    current_month = dates[i + 1].month
+                    current_year = dates[i + 1].year
+                    month_start_idx = i + 1
     else:
         output_lines.append("Week | Date (Monday) | Pot | Vault | Spend | Weekly Profit | Withdrawal")
         output_lines.append("-" * 80)
@@ -163,6 +218,44 @@ def main():
         output_lines.append(f"Final pot: ${history[-1]['pot']:,.2f}")
         output_lines.append(f"Total vault: ${history[-1]['vault']:,.2f}")
         output_lines.append(f"Total spend: ${history[-1]['spend']:,.2f}")
+        output_lines.append("")
+        output_lines.append("Simulation Parameters:")
+        output_lines.append(f"Growth phase vault allocation: {growth_vault_pct:.1f}%")
+        output_lines.append(f"Harvest phase vault allocation: {harvest_vault_pct:.1f}%")
+        
+        # Add monthly report
+        output_lines.append("")
+        output_lines.append("=" * 80)
+        output_lines.append("MONTHLY REPORT")
+        output_lines.append("=" * 80)
+        output_lines.append("Month          | End Date   | Pot Value            | Vault Savings         | Monthly Spending    | Weekly Spending")
+        output_lines.append("-" * 130)
+        
+        current_month = start_date.month
+        current_year = start_date.year
+        month_start_idx = 0
+        
+        for i, (entry, date) in enumerate(zip(history, dates)):
+            # Check if we've reached end of month or end of simulation
+            is_month_end = (i == len(history) - 1) or (dates[i + 1].month != current_month or dates[i + 1].year != current_year)
+            
+            if is_month_end:
+                month_start_spend = history[month_start_idx]['spend']
+                month_end_spend = entry['spend']
+                monthly_spend_increase = month_end_spend - month_start_spend
+                
+                # Calculate number of weeks in this month
+                weeks_in_month = i - month_start_idx + 1
+                spending_per_week = monthly_spend_increase / weeks_in_month if weeks_in_month > 0 else 0
+                
+                month_name = date.strftime('%B %Y')
+                output_lines.append(f"{month_name:14s} | {date.strftime('%Y-%m-%d'):10s} | ${entry['pot']:>19,.2f} | ${entry['vault']:>19,.2f} | ${monthly_spend_increase:>21,.2f} | ${spending_per_week:>19,.2f}")
+                
+                # Update for next month
+                if i < len(history) - 1:
+                    current_month = dates[i + 1].month
+                    current_year = dates[i + 1].year
+                    month_start_idx = i + 1
 
     # Write text file
     with open(txt_filepath, 'w') as f:
@@ -193,9 +286,6 @@ def main():
     plt.grid(True)
     plt.savefig(plot_filepath)
     plt.close()  # Close the plot to allow program to exit
-
-if __name__ == "__main__":
-    main()
 
 if __name__ == "__main__":
     main()

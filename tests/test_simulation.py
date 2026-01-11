@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
-from simulator.simulation import simulate_exponential_growth, simulate_10K_baseline_harvest_engine
+from simulator.simulation import simulate_exponential_growth, simulate_baseline_harvest_engine
 
 class TestSimulateExponentialGrowth:
     def test_default_parameters(self):
@@ -42,7 +42,7 @@ class TestSimulateExponentialGrowth:
 class TestSimulate10KBaselineHarvestEngine:
     def test_accumulation_phase_only(self):
         """Test when pot never reaches cap - all accumulation."""
-        history = simulate_10K_baseline_harvest_engine(
+        history = simulate_baseline_harvest_engine(
             initial_pot=1000, weekly_return_rate=0.1, engine_cap=10000, total_weeks=10, initial_vault=0
         )
         assert len(history) == 10
@@ -58,7 +58,7 @@ class TestSimulate10KBaselineHarvestEngine:
 
     def test_distribution_phase(self):
         """Test when pot reaches cap and starts distributing."""
-        history = simulate_10K_baseline_harvest_engine(
+        history = simulate_baseline_harvest_engine(
             initial_pot=9000, weekly_return_rate=0.2, engine_cap=10000, total_weeks=5, initial_vault=100
         )
         assert len(history) == 5
@@ -78,7 +78,7 @@ class TestSimulate10KBaselineHarvestEngine:
     def test_deficit_repair(self):
         """Test deficit rule - no withdrawals when below cap."""
         # Test case where pot grows but stays below cap
-        history = simulate_10K_baseline_harvest_engine(
+        history = simulate_baseline_harvest_engine(
             initial_pot=9000, weekly_return_rate=0.05, engine_cap=10000, total_weeks=1, initial_vault=0
         )
         assert len(history) == 1
@@ -91,7 +91,7 @@ class TestSimulate10KBaselineHarvestEngine:
 
     def test_initial_values(self):
         """Test that initial values are set correctly."""
-        history = simulate_10K_baseline_harvest_engine(
+        history = simulate_baseline_harvest_engine(
             initial_pot=500, weekly_return_rate=0.1, engine_cap=1000, total_weeks=1, initial_vault=50
         )
         assert len(history) == 1
@@ -105,12 +105,12 @@ class TestSimulate10KBaselineHarvestEngine:
 
     def test_zero_weeks(self):
         """Test with zero weeks - should return empty list."""
-        history = simulate_10K_baseline_harvest_engine(total_weeks=0)
+        history = simulate_baseline_harvest_engine(total_weeks=0)
         assert len(history) == 0
 
     def test_high_return_rate(self):
         """Test with high return rate to ensure capping works."""
-        history = simulate_10K_baseline_harvest_engine(
+        history = simulate_baseline_harvest_engine(
             initial_pot=5000, weekly_return_rate=1.0, engine_cap=6000, total_weeks=2, initial_vault=0
         )
         # First week: 5000 * 2 = 10000 > 6000, so cap at 6000, withdraw 4000, vault +=2000, spend +=2000

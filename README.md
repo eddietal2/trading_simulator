@@ -12,24 +12,37 @@ This simulator models the 10K Baseline Harvest Engine strategy starting with $22
 ## Installation
 
 1. Ensure you have Python 3.8+ installed.
-2. Install the package:
-
-```bash
-pip install -e .
-```
+2. (Optional) Create and activate a virtual environment:
+   ```bash
+   python -m venv .venv
+   # On Windows:
+   .venv\Scripts\Activate.ps1
+   # On macOS/Linux:
+   source .venv/bin/activate
+   ```
+3. Install the package:
+   ```bash
+   pip install -e .
+   ```
 
 ## Usage
 
 Run the simulation:
 
 ```bash
-exponential-growth-simulator
+start-simulator
 ```
 
 Or directly:
 
 ```bash
-python -m options_simulator.main
+python -m simulator.main
+```
+
+To clear the output directory:
+
+```bash
+clear-output
 ```
 
 ## Parameters
