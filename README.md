@@ -9,6 +9,16 @@ This simulator models the 10K Baseline Harvest Engine strategy starting with $22
 - **Distribution Phase**: Withdraw excess profits above $10,000 (50% to vault, 50% to spend)
 - **Deficit Protection**: No withdrawals if pot falls below $10,000
 
+## Architecture
+
+For a detailed view of the application architecture, see [architecture/architecture.md](architecture/architecture.md).
+
+To regenerate the architecture diagram:
+
+```bash
+python architecture/generate_architecture.py
+```
+
 ## Installation
 
 1. Ensure you have Python 3.8+ installed.
