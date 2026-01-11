@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="demo/TS_Video_03.gif" alt="Trading Simulator Demo" width="800"/>
+</p>
+
 # 10K Baseline Harvest Engine Simulator
 
 A Python project to simulate the 10K Baseline Harvest Engine with accumulation and distribution phases over 52 weeks.

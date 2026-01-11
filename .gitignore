@@ -139,6 +139,9 @@ last_simulation_params.json
 *.swo
 *~
 
+# Generated documentation
+architecture/*.md
+
 # OS
 .DS_Store
 Thumbs.db
