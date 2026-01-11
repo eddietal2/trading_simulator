@@ -14,42 +14,42 @@ The Trading Simulator is a Python-based application that provides two types of t
 graph TB
     %% User Interface Layer
     subgraph "User Interface Layer"
-        CLI[CLI Interface<br/>main.py]
-        ANIM[ASCII Animation<br/>animate_ascii_art()]
-        MENU[Menu System<br/>Parameter Input]
+        CLI["CLI Interface<br/>main.py"]
+        ANIM["ASCII Animation<br/>animate_ascii_art()"]
+        MENU["Menu System<br/>Parameter Input"]
     end
 
     %% Core Logic Layer
     subgraph "Core Logic Layer"
-        MAIN[Main Controller<br/>main()]
-        PARAM[Parameter Handler<br/>Input Validation]
-        OUTPUT[Output Generator<br/>Reports & Charts]
+        MAIN["Main Controller<br/>main()"]
+        PARAM["Parameter Handler<br/>Input Validation"]
+        OUTPUT["Output Generator<br/>Reports & Charts"]
     end
 
     %% Simulation Engine Layer
     subgraph "Simulation Engine Layer"
-        EXP[Exponential Growth<br/>simulate_exponential_growth()]
-        BASE[Baseline Harvest Engine<br/>simulate_baseline_harvest_engine()]
+        EXP["Exponential Growth<br/>simulate_exponential_growth()"]
+        BASE["Baseline Harvest Engine<br/>simulate_baseline_harvest_engine()"]
     end
 
     %% Data Management Layer
     subgraph "Data Management Layer"
-        JSON[Parameter Persistence<br/>last_simulation_params.json]
-        REPORTS[Report Generation<br/>simulation.txt + plot.png]
-        HISTORY[Simulation History<br/>Weekly Data Points]
+        JSON["Parameter Persistence<br/>last_simulation_params.json"]
+        REPORTS["Report Generation<br/>simulation.txt + plot.png"]
+        HISTORY["Simulation History<br/>Weekly Data Points"]
     end
 
     %% Testing Layer
     subgraph "Testing Layer"
-        UNIT[Unit Tests<br/>test_simulation.py]
-        PYTEST[pytest Framework]
+        UNIT["Unit Tests<br/>test_simulation.py"]
+        PYTEST["pytest Framework"]
     end
 
     %% External Dependencies
     subgraph "External Dependencies"
-        NUMPY[numpy<br/>Numerical Computing]
-        MATPLOTLIB[matplotlib<br/>Chart Generation]
-        COLORAMA[colorama<br/>Terminal Colors]
+        NUMPY["numpy<br/>Numerical Computing"]
+        MATPLOTLIB["matplotlib<br/>Chart Generation"]
+        COLORAMA["colorama<br/>Terminal Colors"]
     end
 
     %% Flow Connections
@@ -162,4 +162,4 @@ Or for detailed view:
 python architecture/generate_architecture.py --detailed
 ```
 
-Generated on: 2026-01-10 21:59:57
+Generated on: 2026-01-11 00:14:23
