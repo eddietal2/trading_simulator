@@ -3,7 +3,10 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
+from datetime import datetime, timedelta
+from unittest.mock import patch
 from simulator.simulation import simulate_exponential_growth, simulate_baseline_harvest_engine
+from simulator.main import get_start_monday
 
 class TestSimulateExponentialGrowth:
     def test_default_parameters(self):
@@ -39,7 +42,7 @@ class TestSimulateExponentialGrowth:
         assert amounts[0] == 1000
         assert amounts[1] == 1000 * 1.2
 
-class TestSimulate10KBaselineHarvestEngine:
+class TestSimulateBaselineHarvestEngine:
     def test_accumulation_phase_only(self):
         """Test when pot never reaches cap - all accumulation."""
         history = simulate_baseline_harvest_engine(
@@ -113,13 +116,88 @@ class TestSimulate10KBaselineHarvestEngine:
         history = simulate_baseline_harvest_engine(
             initial_pot=5000, weekly_return_rate=1.0, engine_cap=6000, total_weeks=2, initial_vault=0
         )
-        # First week: 5000 * 2 = 10000 > 6000, so cap at 6000, withdraw 4000, vault +=2000, spend +=2000
+        # First week: 5000 * 2 = 10000 > 6000, cap at 6000, withdraw 4000
+        # Uses growth_vault_pct (50% default): vault = 2000, spend = 2000
         assert history[0]['pot'] == 6000
         assert history[0]['withdrawal'] == 4000
         assert history[0]['vault'] == 2000
         assert history[0]['spend'] == 2000
-        # Second week: 6000 * 2 = 12000 > 6000, withdraw 6000, etc.
+        # Second week: 6000 * 2 = 12000 > 6000, withdraw 6000
+        # Uses harvest_vault_pct (25% default): vault += 1500, spend += 4500
         assert history[1]['pot'] == 6000
         assert history[1]['withdrawal'] == 6000
-        assert history[1]['vault'] == 2000 + 3000 == 5000
-        assert history[1]['spend'] == 2000 + 3000 == 5000
+        assert history[1]['vault'] == 2000 + 1500  # 3500
+        assert history[1]['spend'] == 2000 + 4500  # 6500
+
+class TestGetStartMonday:
+    """Tests for the get_start_monday function that determines simulation start date."""
+
+    def test_sunday_returns_next_monday(self):
+        """Sunday 1/11/2026 should return Monday 1/12/2026."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 11)  # Sunday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 12).date()  # Next Monday
+            assert result.weekday() == 0  # Monday
+
+    def test_saturday_returns_next_monday(self):
+        """Saturday 1/10/2026 should return Monday 1/12/2026."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 10)  # Saturday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 12).date()  # Next Monday
+            assert result.weekday() == 0  # Monday
+
+    def test_wednesday_returns_previous_monday(self):
+        """Wednesday 1/08/2026 should return Monday 1/05/2026."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 8)  # Wednesday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 5).date()  # Previous Monday
+            assert result.weekday() == 0  # Monday
+
+    def test_monday_returns_same_day(self):
+        """Monday 1/05/2026 should return Monday 1/05/2026 (same day)."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 5)  # Monday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 5).date()  # Same Monday
+            assert result.weekday() == 0  # Monday
+
+    def test_friday_returns_previous_monday(self):
+        """Friday 1/09/2026 should return Monday 1/05/2026."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 9)  # Friday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 5).date()  # Previous Monday
+            assert result.weekday() == 0  # Monday
+
+    def test_tuesday_returns_previous_monday(self):
+        """Tuesday 1/06/2026 should return Monday 1/05/2026."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 6)  # Tuesday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 5).date()  # Previous Monday
+            assert result.weekday() == 0  # Monday
+
+    def test_thursday_returns_previous_monday(self):
+        """Thursday 1/07/2026 should return Monday 1/05/2026."""
+        with patch('simulator.main.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2026, 1, 7)  # Thursday
+            mock_datetime.combine = datetime.combine
+            mock_datetime.min = datetime.min
+            result = get_start_monday()
+            assert result.date() == datetime(2026, 1, 5).date()  # Previous Monday
+            assert result.weekday() == 0  # Monday
