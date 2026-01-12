@@ -10,6 +10,30 @@ from .simulation import simulate_baseline_harvest_engine, simulate_exponential_g
 # Initialize colorama
 init(autoreset=True)
 
+
+def get_start_monday():
+    """
+    Calculate the appropriate Monday to start the simulation based on current date.
+    
+    - If current day is a weekend (Saturday=5, Sunday=6), return the next Monday.
+    - If current day is a weekday (Monday=0 to Friday=4), return the most recent Monday.
+    
+    Examples:
+    - Today is Sunday 1/11 -> Start on Monday 1/12 (next Monday)
+    - Today is Wednesday 1/08 -> Start on Monday 1/05 (most recent Monday)
+    """
+    today = datetime.now().date()
+    weekday = today.weekday()  # Monday=0, Sunday=6
+    
+    if weekday >= 5:  # Saturday (5) or Sunday (6)
+        # Calculate days until next Monday
+        days_until_monday = 7 - weekday
+        return datetime.combine(today + timedelta(days=days_until_monday), datetime.min.time())
+    else:  # Weekday (Monday=0 to Friday=4)
+        # Calculate days since last Monday
+        days_since_monday = weekday
+        return datetime.combine(today - timedelta(days=days_since_monday), datetime.min.time())
+
 def animate_ascii_art():
     """Display the ASCII art banner"""
     trading_art = [
@@ -264,8 +288,8 @@ def main():
         title = "Baseline Harvest Engine Simulation"
         plot_title = f"Baseline Harvest Engine Simulation over {total_weeks} Weeks"
 
-    # Generate dates starting from Monday, January 5, 2026
-    start_date = datetime(2026, 1, 5)  # Monday
+    # Generate dates starting from the appropriate Monday based on current date
+    start_date = get_start_monday()
     dates = [start_date + timedelta(weeks=i) for i in range(len(history))]
 
     # Create output directory if it doesn't exist
