@@ -9,6 +9,7 @@ A comprehensive Python application featuring two distinct trading simulation eng
 ## 🚀 Features
 
 - **Two Simulation Types**: Choose between compound growth or harvest-based strategies
+- **Dynamic Start Date**: Simulations automatically start from the current week's Monday
 - **Interactive CLI**: Colorful, user-friendly command-line interface
 - **Parameter Persistence**: Save and re-run previous simulations instantly
 - **Comprehensive Reporting**: Weekly breakdowns, monthly summaries, and charts
@@ -76,6 +77,13 @@ clear-output
 Choose option `3` from the main menu to instantly re-run your previous simulation with saved parameters.
 
 ## ⚙️ Simulation Parameters
+
+### Start Date Logic
+The simulation automatically determines its start date based on the current day:
+- **Weekdays (Mon-Fri)**: Starts from the most recent Monday
+- **Weekends (Sat-Sun)**: Starts from the upcoming Monday
+
+*Example: If today is Sunday 1/11, simulation starts Monday 1/12. If today is Wednesday 1/08, simulation starts Monday 1/05.*
 
 ### Common Parameters
 - `initial_pot`: Starting investment amount (default: $1,000)
