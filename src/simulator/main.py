@@ -34,6 +34,125 @@ def get_start_monday():
         days_since_monday = weekday
         return datetime.combine(today - timedelta(days=days_since_monday), datetime.min.time())
 
+
+def get_previous_mondays_of_year():
+    """
+    Get all previous Mondays from the current year up to today's date.
+    
+    Returns a list of datetime objects representing each Monday.
+    """
+    today = datetime.now().date()
+    current_year = today.year
+    
+    # Start from January 1st of current year
+    jan_first = datetime(current_year, 1, 1).date()
+    
+    # Find the first Monday of the year
+    days_until_monday = (7 - jan_first.weekday()) % 7
+    if jan_first.weekday() == 0:  # If Jan 1st is already Monday
+        first_monday = jan_first
+    else:
+        first_monday = jan_first + timedelta(days=days_until_monday)
+    
+    # Collect all Mondays up to today
+    mondays = []
+    current_monday = first_monday
+    while current_monday <= today:
+        mondays.append(datetime.combine(current_monday, datetime.min.time()))
+        current_monday += timedelta(weeks=1)
+    
+    return mondays
+
+
+def select_start_date():
+    """
+    Prompt user to select a start date for the simulation.
+    
+    Options:
+    1. This week's Monday
+    2. Select from previous Mondays of the current year
+    
+    Returns a datetime object.
+    """
+    today = datetime.now()
+    mondays = get_previous_mondays_of_year()
+    this_weeks_monday = get_start_monday()
+    
+    print(f"\n{Fore.CYAN}{Style.BRIGHT}📅 Select Simulation Start Date:{Style.RESET_ALL}")
+    print(f"1. 📆 This week's Monday ({this_weeks_monday.strftime('%Y-%m-%d %A')})")
+    print(f"2. 📋 Select from previous Mondays of {today.year}")
+    
+    while True:
+        date_choice = input(f"{Fore.YELLOW}Select option (1 or 2) [1]: {Style.RESET_ALL}").strip()
+        if date_choice == "":
+            date_choice = "1"
+        if date_choice in ["1", "2"]:
+            break
+        print(f"{Fore.RED}❌ Invalid choice. Please enter 1 or 2.{Style.RESET_ALL}")
+    
+    if date_choice == "1":
+        # Use this week's Monday
+        return this_weeks_monday
+    else:
+        # Show list of Mondays to select from
+        if not mondays:
+            print(f"{Fore.RED}❌ No Mondays found in the current year yet. Using today's date.{Style.RESET_ALL}")
+            return datetime.combine(today.date(), datetime.min.time())
+        
+        print(f"\n{Fore.GREEN}Previous Mondays of {today.year}:{Style.RESET_ALL}")
+        
+        # Show Mondays in reverse order (most recent first) with pagination
+        reversed_mondays = list(reversed(mondays))
+        page_size = 10
+        total_pages = (len(reversed_mondays) + page_size - 1) // page_size
+        current_page = 0
+        
+        while True:
+            start_idx = current_page * page_size
+            end_idx = min(start_idx + page_size, len(reversed_mondays))
+            
+            print(f"\n{Fore.CYAN}Page {current_page + 1}/{total_pages}{Style.RESET_ALL}")
+            for i in range(start_idx, end_idx):
+                monday = reversed_mondays[i]
+                week_num = (monday.date() - datetime(today.year, 1, 1).date()).days // 7 + 1
+                print(f"{i + 1:3d}. {monday.strftime('%Y-%m-%d')} (Week {week_num})")
+            
+            # Navigation options
+            nav_options = []
+            if current_page > 0:
+                nav_options.append("p=prev")
+            if current_page < total_pages - 1:
+                nav_options.append("n=next")
+            nav_str = ", ".join(nav_options) if nav_options else ""
+            
+            prompt = f"{Fore.YELLOW}Enter number to select"
+            if nav_str:
+                prompt += f" ({nav_str})"
+            prompt += f" [1]: {Style.RESET_ALL}"
+            
+            selection = input(prompt).strip().lower()
+            
+            if selection == "":
+                selection = "1"
+            
+            if selection == "p" and current_page > 0:
+                current_page -= 1
+                continue
+            elif selection == "n" and current_page < total_pages - 1:
+                current_page += 1
+                continue
+            
+            try:
+                idx = int(selection) - 1
+                if 0 <= idx < len(reversed_mondays):
+                    selected_date = reversed_mondays[idx]
+                    print(f"{Fore.GREEN}✅ Selected: {selected_date.strftime('%Y-%m-%d %A')}{Style.RESET_ALL}")
+                    return selected_date
+                else:
+                    print(f"{Fore.RED}❌ Invalid selection. Please enter a number between 1 and {len(reversed_mondays)}.{Style.RESET_ALL}")
+            except ValueError:
+                print(f"{Fore.RED}❌ Invalid input. Please enter a valid number.{Style.RESET_ALL}")
+
 def animate_ascii_art():
     """Display the ASCII art banner"""
     trading_art = [
@@ -131,6 +250,12 @@ def main():
             weekly_return_rate = params['weekly_return_rate']
             total_weeks = params['total_weeks']
             
+            # Load start date if saved, otherwise use default
+            if 'start_date' in params:
+                start_date = datetime.strptime(params['start_date'], '%Y-%m-%d')
+            else:
+                start_date = get_start_monday()
+            
             if simulation_type == "baseline":
                 engine_cap = params['engine_cap']
                 initial_vault = params['initial_vault']
@@ -146,6 +271,9 @@ def main():
     else:
         skip_input = False
         simulation_type = "exponential" if sim_choice == "1" else "baseline"
+        
+        # Prompt for start date selection
+        start_date = select_start_date()
     
     # Get principal
     if not skip_input:
@@ -163,6 +291,7 @@ def main():
                 print(f"{Fore.RED}❌ Invalid input. Please enter a valid number (e.g., {default_principal}).{Style.RESET_ALL}")
     else:
         print(f"{Fore.MAGENTA}💵 Using principal: ${initial_pot:,.2f}{Style.RESET_ALL}")
+        print(f"{Fore.MAGENTA}📅 Using start date: {start_date.strftime('%Y-%m-%d %A')}{Style.RESET_ALL}")
     
     if simulation_type == "exponential":
         if not skip_input:
@@ -288,8 +417,7 @@ def main():
         title = "Baseline Harvest Engine Simulation"
         plot_title = f"Baseline Harvest Engine Simulation over {total_weeks} Weeks"
 
-    # Generate dates starting from the appropriate Monday based on current date
-    start_date = get_start_monday()
+    # Generate dates starting from the selected start date
     dates = [start_date + timedelta(weeks=i) for i in range(len(history))]
 
     # Create output directory if it doesn't exist
@@ -418,7 +546,8 @@ def main():
         'simulation_type': simulation_type,
         'initial_pot': initial_pot,
         'weekly_return_rate': weekly_return_rate,
-        'total_weeks': total_weeks
+        'total_weeks': total_weeks,
+        'start_date': start_date.strftime('%Y-%m-%d')
     }
     
     if simulation_type == "baseline":
