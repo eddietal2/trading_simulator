@@ -562,9 +562,34 @@ def main():
         json.dump(params, f, indent=2)
     print(f"{Fore.MAGENTA}💾 Simulation parameters saved for re-do functionality.{Style.RESET_ALL}")
 
-    # Print to console
-    for line in output_lines:
-        print(line)
+    # Determine current week for highlighting
+    today = datetime.now().date()
+    current_week_idx = None
+    for i, date in enumerate(dates):
+        week_start = date.date()
+        week_end = week_start + timedelta(days=6)
+        if week_start <= today <= week_end:
+            current_week_idx = i
+            break
+
+    # Print to console with current week highlighting
+    for idx, line in enumerate(output_lines):
+        # Check if this line corresponds to the current week
+        # The weekly data starts after the header (title + column header + separator = 3 lines for exponential, same for baseline)
+        header_offset = 3  # title, column headers, separator line
+        is_current_week_line = False
+        
+        if current_week_idx is not None:
+            # For exponential: weekly data is at indices header_offset + week_number
+            # For baseline: same structure
+            week_line_idx = header_offset + current_week_idx
+            if idx == week_line_idx:
+                is_current_week_line = True
+        
+        if is_current_week_line:
+            print(f"{Fore.YELLOW}{Style.BRIGHT}{line} ← CURRENT WEEK{Style.RESET_ALL}")
+        else:
+            print(line)
 
     # Plot based on type
     weeks = [entry['week'] for entry in history]
