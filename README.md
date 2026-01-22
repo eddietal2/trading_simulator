@@ -2,6 +2,14 @@
   <img src="demo/TS_Video_03.gif" alt="Trading Simulator Demo" width="800"/>
 </p>
 
+## 🎮 TRY ME
+
+[![Run on Replit](https://replit.com/badge/github/eddietal2/trading_simulator)](https://replit.com/github/eddietal2/trading_simulator)
+
+> Click the badge above to run the simulator in your browser!
+
+---
+
 # Trading Simulator
 
 A comprehensive Python application featuring two distinct trading simulation engines: **Exponential Growth** and **Baseline Harvest Engine**. Perfect for analyzing different investment strategies and risk management approaches.
